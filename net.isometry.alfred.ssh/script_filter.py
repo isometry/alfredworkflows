@@ -1,4 +1,4 @@
-# $Id$
+# Open SSH.alfredworkflow, v0.7
 # Robin Breathe, 2013
 
 from os import path
@@ -12,10 +12,10 @@ bonjour_timeout = 0.1
 if '@' in query:
     (user, host) = query.split('@', 1)
 else:
-    host = query
-    user = None
+    (user, host) = (None, query)
 
-pattern = re.compile('.*?%s' % '.*?\b?'.join(list(host)), flags=re.IGNORECASE)
+host_chars = map(lambda x: '\.' if x is '.' else x, list(host))
+pattern = re.compile('.*?%s' % '.*?\b?'.join(host_chars), flags=re.IGNORECASE)
 
 arg = lambda u, h: u and '@'.join([u,h]) or h
 uri = lambda u, h: 'ssh://%s' % arg(u, h)
