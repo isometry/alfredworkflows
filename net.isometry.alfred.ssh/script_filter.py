@@ -1,9 +1,12 @@
-# Open SSH.alfredworkflow, v0.8
+# Open SSH.alfredworkflow, v0.9
 # Robin Breathe, 2013
 
+import json
 from os import path
 import xml.etree.ElementTree as ET
 import re
+import alfred
+
 
 query = "{query}"
 
@@ -17,17 +20,14 @@ else:
 host_chars = map(lambda x: '\.' if x is '.' else x, list(host))
 pattern = re.compile('.*?%s' % '.*?\b?'.join(host_chars), flags=re.IGNORECASE)
 
-arg = lambda u, h: u and '@'.join([u,h]) or h
+class SSHItem(alfred.Item):
+    def __init__(self, user, host):
+        _arg = user and '@'.join([user,host]) or host
+        _uri = 'ssh://%s' % _arg
+        return super(SSHItem, self).__init__(attributes={'uid':_uri, 'arg':_arg},
+            title=_uri, subtitle='SSH to %s' % host, icon='icon.png')
 
-def add_item(root, user, host):
-    _arg = arg(user, host)
-    _uri = 'ssh://%s' % _arg
-    item = ET.SubElement(root, 'item', uid=_uri, arg=_arg, autocomplete=_arg)
-    ET.SubElement(item, 'title').text = _uri
-    ET.SubElement(item, 'subtitle').text = 'SSH to %s' % host
-    ET.SubElement(item, 'icon', type='fileicon').text = '/Applications/Utilities/Terminal.app'
-
-def parse_ssh_config(_path):
+def fetch_ssh_config(_path):
     results = set([])
     try:
         with open(path.expanduser(_path), 'r') as ssh_config:
@@ -37,7 +37,7 @@ def parse_ssh_config(_path):
         pass
     return results
 
-def parse_known_hosts(_path):
+def fetch_known_hosts(_path):
     results = set([])
     try:
         with open(path.expanduser(_path), 'r') as known_hosts:
@@ -47,7 +47,7 @@ def parse_known_hosts(_path):
         pass
     return results
 
-def parse_hosts(_path):
+def fetch_hosts(_path):
     results = set([])
     try:
         with open(_path, 'r') as etc_hosts:
@@ -58,7 +58,7 @@ def parse_hosts(_path):
         pass
     return results
 
-def discover_bonjour(_service):
+def fetch_bonjour(_service):
     results = set([])
     try:
         from pybonjour import DNSServiceBrowse, DNSServiceProcessResult
@@ -72,27 +72,15 @@ def discover_bonjour(_service):
         pass
     return results
 
-def discover_bonjour(_service):
-    results = set([])
-    from pybonjour import DNSServiceBrowse, DNSServiceProcessResult
-    from select import select
-    bj_callback = lambda s, f, i, e, n, t, d: results.add('%s.%s' % (n, d))
-    bj_browser = DNSServiceBrowse(regtype = _service, callBack = bj_callback)
-    select([bj_browser], [], [], bonjour_timeout)
-    DNSServiceProcessResult(bj_browser)
-    bj_browser.close()
-    return results
-
 hosts = set([])
-hosts.update(parse_ssh_config('~/.ssh/config'))
-hosts.update(parse_known_hosts('~/.ssh/known_hosts'))
-hosts.update(parse_hosts('/etc/hosts'))
-hosts.update(discover_bonjour('_ssh._tcp'))
+hosts.update(fetch_ssh_config('~/.ssh/config'))
+hosts.update(fetch_known_hosts('~/.ssh/known_hosts'))
+hosts.update(fetch_hosts('/etc/hosts'))
+hosts.update(fetch_bonjour('_ssh._tcp'))
 hosts.discard(host)
 
-root = ET.Element('items')
-add_item(root, user, host)
-for h in (h for h in hosts if pattern.match(h)):
-    add_item(root, user, h)
+results = [SSHItem(user, host)]
+for host in (x for x in hosts if pattern.match(x)):
+    results.append(SSHItem(user, host))
 
-print ET.tostring(root, encoding='utf-8')
+print alfred.xml(results)
