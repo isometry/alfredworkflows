@@ -58,7 +58,7 @@ def filter_whatis_description(_filter, whatis):
 def result_list(query, whatis={}):
     results = []
     for (page, description) in whatis.iteritems():
-        if fnmatch(page, '*%s*' % query):
+        if fnmatch(page, '%s*' % query):
             _uri = man_uri(page)
             results.append(alfred.Item(
                 attributes = {'uid': _uri, 'arg': _uri},
@@ -98,7 +98,10 @@ def complete(query):
         pattern = re.compile(r'^.+\(%s\)$' % _section)
         _whatis = filter_whatis_name(pattern.match, whatis)
         results.extend(result_list(_title, _whatis))
-        
+    
+    # substring matching
+    elif query.startswith('~'):
+        results.extend(result_list('*%s*' % query, whatis))
     # standard filtering
     else:
         results.extend(result_list(query, whatis))
@@ -108,7 +111,7 @@ def complete(query):
         results.append(alfred.Item(
             attributes = {'uid': time(), 'valid': 'no'},
             title = '404 Page Not Found',
-            subtitle = 'No matching man page was found',
+            subtitle = 'No man page was found for %s' % query,
             icon = 'icon.png'
         ))
 

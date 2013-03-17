@@ -25,7 +25,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Open SSH</string>
+	<string>ssh</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -90,6 +90,6 @@ NB: in order to enable Bonjour discovery, you must install the pybonjour module:
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>http://isometry.net/</string>
+	<string>https://github.com/isometry/alfredworkflows</string>
 </dict>
 </plist>

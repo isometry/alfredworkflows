@@ -90,7 +90,7 @@ def fetch_hosts(_path, alias='/etc/hosts'):
             json.dump(list(results), open(cache, 'w'))
             return (results, alias)
 
-def fetch_bonjour(_service, alias='Bonjour'):
+def fetch_bonjour(_service, alias='Bonjour', timeout=0.1):
     cache = path.join(alfred.work(volatile=True), 'bonjour.1.json')
     if path.isfile(cache) and (time() - path.getmtime(cache) < 60):
         return (json.load(open(cache, 'r')), alias)
@@ -101,7 +101,7 @@ def fetch_bonjour(_service, alias='Bonjour'):
             from select import select
             bj_callback = lambda s, f, i, e, n, t, d: results.add('%s.%s' % (n.lower(), d[:-1]))
             bj_browser = DNSServiceBrowse(regtype = _service, callBack = bj_callback)
-            select([bj_browser], [], [], 0.1)
+            select([bj_browser], [], [], timeout)
             DNSServiceProcessResult(bj_browser)
             bj_browser.close()
         except ImportError:
@@ -116,7 +116,7 @@ def complete(query):
         (user, host) = (None, query)
 
     host_chars = map(lambda x: '\.' if x is '.' else x, list(host))
-    pattern = re.compile('.*?%s' % '.*?\b?'.join(host_chars), flags=re.IGNORECASE)
+    pattern = re.compile('.*?\b?'.join(host_chars), flags=re.IGNORECASE)
     
     hosts = Hosts(original=host, user=user)
     hosts.update(fetch_ssh_config('~/.ssh/config'))
@@ -124,4 +124,4 @@ def complete(query):
     hosts.update(fetch_hosts('/etc/hosts'))
     hosts.update(fetch_bonjour('_ssh._tcp'))
 
-    return hosts.xml(pattern.match)
+    return hosts.xml(pattern.search)

@@ -75,7 +75,8 @@ print complete("{query}")</string>
 
 Usage:
 man open(1)  # open a specific page
-man open     # search all sections for pages with 'open' in the name
+man open     # search all sections for pages matching 'open*'
+man *open    # search all sections for pages matching '*open*'
 man 2 open   # search section 2 for pages with 'open' in the name</string>
 	<key>uidata</key>
 	<dict>
