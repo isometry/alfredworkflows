@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>net.isometry.alfred.man</string>
+	<key>connections</key>
+	<dict>
+		<key>E2389990-4936-4DA7-AA4D-3236223735EA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>74291A6F-4872-4DDA-823C-F4056C202562</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Robin Breathe</string>
+	<key>description</key>
+	<string>Open man page using x-man-page: protocol</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>man</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>74291A6F-4872-4DDA-823C-F4056C202562</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>4</integer>
+				<key>keyword</key>
+				<string>man</string>
+				<key>runningsubtext</key>
+				<string>Searching whatis database…</string>
+				<key>script</key>
+				<string>from alfredman import complete
+print complete("{query}")</string>
+				<key>title</key>
+				<string>Open man page</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>E2389990-4936-4DA7-AA4D-3236223735EA</string>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Open a man(1) page with name and section filtering.
+
+Usage:
+man open(1)  # open a specific page
+man open     # search all sections for pages with 'open' in the name
+man 2 open   # search section 2 for pages with 'open' in the name</string>
+	<key>uidata</key>
+	<dict>
+		<key>74291A6F-4872-4DDA-823C-F4056C202562</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>E2389990-4936-4DA7-AA4D-3236223735EA</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>https://github.com/isometry/alfredworkflows</string>
+</dict>
+</plist>
