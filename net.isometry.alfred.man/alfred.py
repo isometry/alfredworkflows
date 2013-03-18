@@ -7,6 +7,7 @@ import sys
 
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+_MAX_RESULTS_DEFAULT = 9
 UNESCAPE_CHARACTERS = u"""\\ ()[]{};`'"$"""
 
 preferences = plistlib.readPlist('info.plist')
@@ -71,7 +72,7 @@ def work(volatile):
 def write(text):
     sys.stdout.write(text)
 
-def xml(items, maxresults=9):
+def xml(items, maxresults=_MAX_RESULTS_DEFAULT):
     root = Element('items')
     for item in itertools.islice(items, maxresults):
         root.append(item.xml())

@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
+# man.alfredworkflow, v1.1
+# Robin Breathe, 2013
 
 import alfred
 import json
 import re
 import subprocess
+
 from fnmatch import fnmatch
 from os import path
 from time import time
 
+_MAX_RESULTS=36
 
 def clean_ascii(string):
     return ''.join(i for i in string if ord(i)<128)
-
 
 def fetch_whatis(max_age=604800):
     cache = path.join(alfred.work(volatile=True), u'whatis.1.json')
@@ -29,7 +32,6 @@ def fetch_whatis(max_age=604800):
     json.dump(whatis, open(cache, 'w'))
     return whatis
 
-
 def fetch_sections(whatis, max_age=604800):
     cache = path.join(alfred.work(volatile=True), u'sections.1.json')
     if path.isfile(cache) and (time() - path.getmtime(cache) < max_age):
@@ -43,21 +45,17 @@ def fetch_sections(whatis, max_age=604800):
     json.dump(list(sections), open(cache, 'w'))
     return sections
     
-
 def man_uri(manpage, protocol='x-man-page'):
     pattern = re.compile(r'(.*)\((.+)\)')
     sre = pattern.match(manpage)
     (title, section) = (sre.group(1), sre.group(2))
     return u'%s://%s/%s' % (protocol, section, title)
 
-
 def filter_whatis_name(_filter, whatis):
     return {k: v for (k, v) in whatis.iteritems() if _filter(k)}
 
-
 def filter_whatis_description(_filter, whatis):
     return {k: v for (k, v) in whatis.iteritems() if _filter(v)}
-
 
 def result_list(query, whatis=None):
     results = []
@@ -74,8 +72,7 @@ def result_list(query, whatis=None):
             ))
     return results
 
-
-def complete(query):
+def complete(query, maxresults=_MAX_RESULTS):
     whatis = fetch_whatis()
     sections = fetch_sections(whatis)
         
@@ -122,4 +119,4 @@ def complete(query):
             icon = 'icon.png'
         ))
 
-    return alfred.xml(results, maxresults=45)
+    return alfred.xml(results, maxresults=maxresults)

@@ -1,13 +1,15 @@
 #-*- coding: utf-8 -*-
-# Open SSH.alfredworkflow, v1.1
+# ssh.alfredworkflow, v1.1
 # Robin Breathe, 2013
 
 import alfred
-from os import path
-from time import time
 import json
 import re
 
+from os import path
+from time import time
+
+_MAX_RESULTS=36
 
 class Hosts(object):
     def __init__(self, original, user=None):
@@ -37,7 +39,7 @@ class Hosts(object):
             title=_uri, subtitle=_sub, icon='icon.png'
         )
 
-    def xml(self, _filter=(lambda x: True), maxresults=36):
+    def xml(self, _filter=(lambda x: True), maxresults=_MAX_RESULTS):
         items = [self.item(host=self.original, source=self.hosts[self.original])]
         for (host, source) in (
             (x, y) for (x, y) in self.hosts.iteritems()
@@ -45,7 +47,6 @@ class Hosts(object):
         ):
             items.append(self.item(host, source))
         return alfred.xml(items, maxresults=maxresults)
-
 
 def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
     master = path.expanduser(_path)
@@ -66,8 +67,7 @@ def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
     except IOError:
         pass
     json.dump(list(results), open(cache, 'w'))
-    return (results, alias)
-
+    return (results, alias)z
 
 def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
     master = path.expanduser(_path)
@@ -85,7 +85,6 @@ def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
         pass
     json.dump(list(results), open(cache, 'w'))
     return (results, alias)
-
 
 def fetch_hosts(_path, alias='/etc/hosts'):
     master = path.expanduser(_path)
@@ -105,7 +104,6 @@ def fetch_hosts(_path, alias='/etc/hosts'):
     json.dump(list(results), open(cache, 'w'))
     return (results, alias)
 
-
 def fetch_bonjour(_service, alias='Bonjour', timeout=0.1):
     cache = path.join(alfred.work(volatile=True), 'bonjour.1.json')
     if path.isfile(cache) and (time() - path.getmtime(cache) < 60):
@@ -124,8 +122,7 @@ def fetch_bonjour(_service, alias='Bonjour', timeout=0.1):
     json.dump(list(results), open(cache, 'w'))
     return (results, alias)
 
-
-def complete(query):
+def complete(query, maxresults=_MAX_RESULTS):
     if '@' in query:
         (user, host) = query.split('@', 1)
     else:
@@ -143,4 +140,4 @@ def complete(query):
     ):
         hosts.update(results)
 
-    return hosts.xml(pattern.search)
+    return hosts.xml(pattern.search, maxresults=maxresults)
