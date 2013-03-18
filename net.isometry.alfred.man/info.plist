@@ -50,15 +50,17 @@
 
 query="{query}"
 
+cache="com.runningwithcrayons.Alfred-2/Workflow Data/net.isometry.alfred.man"
+
 name=${query#*/}
 sect=${query%/*}
-file=$(mktemp -t man).html
+file=$(env TMPDIR=~/Library/Caches/"$cache" mktemp -t man).html
 page=$(man -w -s $sect $name)
 
-groff -Thtml -mandoc -c $page &gt; $file \
-&amp;&amp; open -b $BROWSER $file
+groff -Thtml -mandoc -c "$page" &gt; "$file" \
+&amp;&amp; open -b "$BROWSER" "$file"
 
-sleep 10 &amp;&amp; rm $file</string>
+sleep 10 &amp;&amp; rm "$file"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
