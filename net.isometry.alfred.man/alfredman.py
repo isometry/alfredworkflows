@@ -115,4 +115,4 @@ def complete(query):
             icon = 'icon.png'
         ))
 
-    return alfred.xml(results)
+    return alfred.xml(results, maxresults=45)

@@ -35,7 +35,7 @@ class Hosts(object):
         items = [self.item(host=self.original, source=self.hosts[self.original])]
         for (host, source) in ((x,y) for (x,y) in self.hosts.iteritems() if x<>self.original and _filter(x)):
             items.append(self.item(host, source))
-        return alfred.xml(items)
+        return alfred.xml(items, maxresults=18)
     
 
 def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
