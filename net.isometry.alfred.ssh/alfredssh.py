@@ -131,7 +131,7 @@ def complete(query):
     else:
         (user, host) = (None, query)
 
-    host_chars = map(lambda x: '\.' if x is '.' else x, list(host))
+    host_chars = (('\\.' if x is '.' else x) for x in list(host))
     pattern = re.compile('.*?\b?'.join(host_chars), flags=re.IGNORECASE)
 
     hosts = Hosts(original=host, user=user)

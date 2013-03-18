@@ -8,39 +8,40 @@ from fnmatch import fnmatch
 from os import path
 from time import time
 
-def clean_ascii(s):
-    return ''.join(i for i in s if ord(i)<128)
+
+def clean_ascii(string):
+    return ''.join(i for i in string if ord(i)<128)
+
 
 def fetch_whatis(max_age=604800):
     cache = path.join(alfred.work(volatile=True), u'whatis.1.json')
     if path.isfile(cache) and (time() - path.getmtime(cache) < max_age):
         return json.load(open(cache, 'r'))
-    else:
-        raw_pages = subprocess.check_output(['/usr/bin/man', '-k', '-Pcat', '.'])
-        pagelist  = map(
-            lambda x: map(lambda y: y.strip(), x.split(' - ', 1)),
-            clean_ascii(raw_pages).splitlines()
-        )
-        whatis = {}
-        for (pages, description) in pagelist:
-            for page in pages.split(', '):
-                whatis[page] = description
-        json.dump(whatis, open(cache, 'w'))
-        return whatis
+    raw_pages = subprocess.check_output(['/usr/bin/man', '-k', '-Pcat', '.'])
+    pagelist  = map(
+        lambda x: map(lambda y: y.strip(), x.split(' - ', 1)),
+        clean_ascii(raw_pages).splitlines()
+    )
+    whatis = {}
+    for (pages, description) in pagelist:
+        for page in pages.split(', '):
+            whatis[page] = description
+    json.dump(whatis, open(cache, 'w'))
+    return whatis
+
 
 def fetch_sections(whatis, max_age=604800):
     cache = path.join(alfred.work(volatile=True), u'sections.1.json')
     if path.isfile(cache) and (time() - path.getmtime(cache) < max_age):
         return set(json.load(open(cache, 'r')))
-    else:
-        sections = set([])
-        pattern = re.compile(r'\(([^()]+)\)$')
-        for (page, description) in whatis.iteritems():
-            sre = pattern.search(page)
-            if sre:
-                sections.add(sre.group(1))
-        json.dump(list(sections), open(cache, 'w'))
-        return sections
+    sections = set([])
+    pattern = re.compile(r'\(([^()]+)\)$')
+    for page in whatis.iterkeys():
+        sre = pattern.search(page)
+        if sre:
+            sections.add(sre.group(1))
+    json.dump(list(sections), open(cache, 'w'))
+    return sections
     
 
 def man_uri(manpage, protocol='x-man-page'):
@@ -49,14 +50,19 @@ def man_uri(manpage, protocol='x-man-page'):
     (title, section) = (sre.group(1), sre.group(2))
     return u'%s://%s/%s' % (protocol, section, title)
 
+
 def filter_whatis_name(_filter, whatis):
-    return {k: v for (k,v) in whatis.iteritems() if _filter(k)}
+    return {k: v for (k, v) in whatis.iteritems() if _filter(k)}
+
 
 def filter_whatis_description(_filter, whatis):
-    return {k: v for (k,v) in whatis.iteritems() if _filter(v)}
+    return {k: v for (k, v) in whatis.iteritems() if _filter(v)}
 
-def result_list(query, whatis={}):
+
+def result_list(query, whatis=None):
     results = []
+    if whatis is None:
+        return results
     for (page, description) in whatis.iteritems():
         if fnmatch(page, '%s*' % query):
             _uri = man_uri(page)
@@ -67,6 +73,7 @@ def result_list(query, whatis={}):
                 icon = 'icon.png'
             ))
     return results
+
 
 def complete(query):
     whatis = fetch_whatis()
