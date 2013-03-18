@@ -54,6 +54,8 @@ def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
                 pass
             json.dump(list(results), open(cache, 'w'))
             return (results, alias)
+    else:
+        return ([], alias)
 
 def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
     master = path.expanduser(_path)
@@ -71,6 +73,8 @@ def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
                 pass
             json.dump(list(results), open(cache, 'w'))
             return (results, alias)
+    else:
+        return ([], alias)
 
 def fetch_hosts(_path, alias='/etc/hosts'):
     master = path.expanduser(_path)
@@ -89,6 +93,8 @@ def fetch_hosts(_path, alias='/etc/hosts'):
                 pass
             json.dump(list(results), open(cache, 'w'))
             return (results, alias)
+    else:
+        return ([], alias)
 
 def fetch_bonjour(_service, alias='Bonjour', timeout=0.1):
     cache = path.join(alfred.work(volatile=True), 'bonjour.1.json')
