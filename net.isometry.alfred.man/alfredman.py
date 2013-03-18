@@ -44,12 +44,15 @@ def fetch_sections(whatis, max_age=604800):
             sections.add(sre.group(1))
     json.dump(list(sections), open(cache, 'w'))
     return sections
-    
-def man_uri(manpage, protocol='x-man-page'):
+
+def man_arg(manpage):
     pattern = re.compile(r'(.*)\((.+)\)')
     sre = pattern.match(manpage)
     (title, section) = (sre.group(1), sre.group(2))
-    return u'%s://%s/%s' % (protocol, section, title)
+    return u'%s/%s' % (section, title)
+    
+def man_uri(manpage, protocol='x-man-page'):
+    return u'%s://%s' % (protocol, man_arg(manpage))
 
 def filter_whatis_name(_filter, whatis):
     return {k: v for (k, v) in whatis.iteritems() if _filter(k)}
@@ -63,9 +66,10 @@ def result_list(query, whatis=None):
         return results
     for (page, description) in whatis.iteritems():
         if fnmatch(page, '%s*' % query):
+            _arg = man_arg(page)
             _uri = man_uri(page)
             results.append(alfred.Item(
-                attributes = {'uid': _uri, 'arg': _uri},
+                attributes = {'uid': _uri, 'arg': _arg},
                 title = page,
                 subtitle = description,
                 icon = 'icon.png'
@@ -80,9 +84,10 @@ def complete(query, maxresults=_MAX_RESULTS):
     
     # direct hit
     if query in whatis:
+        _arg = man_arg(query)
         _uri = man_uri(query)
         results.append(alfred.Item(
-            attributes = {'uid': _uri, 'arg': _uri},
+            attributes = {'uid': _uri, 'arg': _arg},
             title = query,
             subtitle = whatis[query],
             icon = 'icon.png'
@@ -113,7 +118,7 @@ def complete(query, maxresults=_MAX_RESULTS):
     # no matches
     if results == []:
         results.append(alfred.Item(
-            attributes = {'uid': time(), 'valid': 'no'},
+            attributes = {'uid': 'x-man-page://404', 'valid': 'no'},
             title = '404 Page Not Found',
             subtitle = 'No man page was found for %s' % query,
             icon = 'icon.png'
