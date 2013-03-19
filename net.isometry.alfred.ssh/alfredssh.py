@@ -67,7 +67,7 @@ def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
     except IOError:
         pass
     json.dump(list(results), open(cache, 'w'))
-    return (results, alias)z
+    return (results, alias)
 
 def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
     master = path.expanduser(_path)
