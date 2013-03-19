@@ -45,8 +45,8 @@
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>script</key>
-				<string>BROWSER=com.apple.Safari
-#BROWSER=com.google.Chrome
+				<string>#BROWSER=com.apple.Safari
+BROWSER=com.google.Chrome
 
 query="{query}"
 
@@ -54,13 +54,15 @@ cache="com.runningwithcrayons.Alfred-2/Workflow Data/net.isometry.alfred.man"
 
 name=${query#*/}
 sect=${query%/*}
-file=$(env TMPDIR=~/Library/Caches/"$cache" mktemp -t man).html
+file=$(cd ~/Library/Caches/"$cache"; pwd)/$name\($sect\).html
 page=$(man -w -s $sect $name)
 
-groff -Thtml -mandoc -c "$page" &gt; "$file" \
-&amp;&amp; open -b "$BROWSER" "$file"
+if [ "$page" -nt "$file" ]; then
+	groff -Thtml -mandoc -c "$page" &gt; "$file"
+fi
 
-sleep 10 &amp;&amp; rm "$file"</string>
+open "$file"
+</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
