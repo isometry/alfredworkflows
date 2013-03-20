@@ -34,7 +34,7 @@ def fetch_justadded():
 
 def fetch_poster(poster_uri):
     poster_name = u'_%s.%s' % (
-        u'_'.join(poster_uri.split('/')[4:5]),
+        u'_'.join(poster_uri.split('/')[4:6]),
         poster_uri.split('.')[-1]
     )
     cache = path.join(alfred.work(volatile=True), poster_name)
