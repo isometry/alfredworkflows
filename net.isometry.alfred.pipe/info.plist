@@ -28,6 +28,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>D637E280-521E-432F-85C1-3F58E064A66E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Robin Breathe</string>
@@ -42,40 +53,25 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
+				<key>action</key>
 				<integer>0</integer>
-				<key>keyword</key>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>42</integer>
+				<key>hotmod</key>
+				<integer>1179648</integer>
+				<key>hotstring</key>
 				<string>|</string>
-				<key>subtext</key>
-				<string>Process clipboard contents through shell command</string>
-				<key>text</key>
-				<string>Pipe</string>
-				<key>withspace</key>
+				<key>leftcursor</key>
 				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
+				<key>modsmode</key>
 				<integer>0</integer>
-				<key>keyword</key>
-				<string>pipe</string>
-				<key>subtext</key>
-				<string>Process clipboard contents through shell command</string>
-				<key>text</key>
-				<string>Pipe</string>
-				<key>withspace</key>
-				<true/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
+			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
-			<string>04B19B4F-BB32-412E-8C04-848944DE6FAD</string>
+			<string>D637E280-521E-432F-85C1-3F58E064A66E</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -91,6 +87,44 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>pipe</string>
+				<key>subtext</key>
+				<string>Process clipboard contents through one-liner</string>
+				<key>text</key>
+				<string>Pipe</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>04B19B4F-BB32-412E-8C04-848944DE6FAD</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>|</string>
+				<key>subtext</key>
+				<string>Process clipboard contents through one-liner</string>
+				<key>text</key>
+				<string>Pipe</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</string>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -113,6 +147,11 @@
 			<real>60</real>
 		</dict>
 		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+		<key>D637E280-521E-432F-85C1-3F58E064A66E</key>
 		<dict>
 			<key>ypos</key>
 			<real>60</real>
