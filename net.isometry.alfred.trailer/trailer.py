@@ -65,7 +65,7 @@ def search_results(query):
     for r in response['results']:
         address = u''.join((_BASE_URL, r['location']))
         results.append(alfred.Item(
-            attributes = {'uid': u'trailer://%s' % r['location'], 'arg': address},
+            attributes = {'uid': u'trailer://%s' % r['location'], 'arg': address, 'autocomplete': r['title']},
             title = r['title'],
             subtitle = u'Rating: %(rating)s; Studio: %(studio)s' % r,
             icon = fetch_poster(u''.join((_BASE_URL, r['poster'])))
@@ -97,7 +97,7 @@ def latest_results():
     for r in response:
         address = u''.join((_BASE_URL, r['location']))
         results.append(alfred.Item(
-            attributes = {'uid': u'trailer://%s' % r['location'], 'arg': address},
+            attributes = {'uid': u'trailer://%s' % r['location'], 'arg': address, 'autocomplete': r['title']},
             title = r['title'],
             subtitle = u'Studio: %(studio)s' % r,
             icon = fetch_poster(r['poster'])
