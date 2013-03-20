@@ -1,4 +1,4 @@
-all: man pipe ssh
+all: man pipe ssh trailer
 
 man:
 	zip -j9 --filesync man.alfredworkflow  net.isometry.alfred.man/*.{plist,png,py}
@@ -8,4 +8,7 @@ pipe:
 
 ssh:
 	zip -j9 --filesync ssh.alfredworkflow  net.isometry.alfred.ssh/*.{plist,png,py}
+
+trailer:
+	zip -j9 --filesync trailer.alfredworkflow  net.isometry.alfred.trailer/*.{egg,plist,png,py}
 

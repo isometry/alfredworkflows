@@ -21,13 +21,39 @@
 	<key>createdby</key>
 	<string>Robin Breathe</string>
 	<key>description</key>
-	<string></string>
+	<string>Find and open iTunes Movie Trailers</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
 	<string>trailer</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>4</integer>
+				<key>keyword</key>
+				<string>trailer</string>
+				<key>runningsubtext</key>
+				<string>Please wait: searching database and populating poster cache…</string>
+				<key>script</key>
+				<string>from trailer import complete
+print complete("{query}")</string>
+				<key>title</key>
+				<string>Find iTunes Movie Trailers</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>C19EB8CB-CE57-4E24-810C-BE0BDABBAD2A</string>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -42,28 +68,6 @@
 			<string>alfred.workflow.action.openurl</string>
 			<key>uid</key>
 			<string>44E99058-8D71-4227-B1EF-22B2EAC9B680</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>4</integer>
-				<key>keyword</key>
-				<string>trailer</string>
-				<key>script</key>
-				<string>from trailer import complete
-complete("{query}")</string>
-				<key>type</key>
-				<integer>3</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>C19EB8CB-CE57-4E24-810C-BE0BDABBAD2A</string>
 		</dict>
 	</array>
 	<key>readme</key>
