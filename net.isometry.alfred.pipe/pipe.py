@@ -29,7 +29,7 @@ def complete(query, maxresults=_MAX_RESULTS):
             aliases[alias] = pipe
             update_aliases(aliases)
             return alfred.xml([alfred.Item(
-                attributes = {'uid': u'pipe:{}'.format(pipe) , 'valid': u'no', 'autocomplete': pipe},
+                attributes = {'uid': u'pipe:{}'.format(pipe) , 'valid': u'no', 'autocomplete': alias},
                 title = u"{} => ({})".format(alias, pipe),
                 subtitle = u'Alias saved! Hit Enter to continue',
                 icon = u'icon.png'
