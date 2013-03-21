@@ -22,7 +22,7 @@ def fetch_aliases(_path=_ALIASES_FILE):
 
 def write_aliases(_dict, _path=_ALIASES_FILE):
     file = path.join(alfred.work(volatile=False), _path)
-    json.dump(_dict, open(file, 'w'))
+    json.dump(_dict, open(file, 'w'), indent=4, separators=(',', ': '))
 
 def define_alias(_dict, definition):
     if u'=' in definition:

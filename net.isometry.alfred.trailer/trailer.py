@@ -50,7 +50,7 @@ def fetch_poster(poster_uri):
         cache_file.write(r.content)
     return cache
 
-def search_results(query):
+def search_results(query, maxresults=_MAX_RESULTS):
     response = fetch_quickfind(query)
 
     if not response or response['error']:
@@ -62,7 +62,7 @@ def search_results(query):
         )])
 
     results = []
-    for r in response['results']:
+    for r in response['results'][:maxresults]:
         address = u''.join((_BASE_URL, r['location']))
         results.append(alfred.Item(
             attributes = {'uid': u'trailer://%s' % r['location'], 'arg': address, 'autocomplete': r['title']},
@@ -82,7 +82,7 @@ def search_results(query):
 
     return results
 
-def latest_results():
+def latest_results(maxresults=_MAX_RESULTS):
     response = fetch_justadded()
     
     if not response:
@@ -94,7 +94,7 @@ def latest_results():
         )])
     
     results = []
-    for r in response:
+    for r in response[:maxresults]:
         address = u''.join((_BASE_URL, r['location']))
         results.append(alfred.Item(
             attributes = {'uid': u'trailer://%s' % r['location'], 'arg': address, 'autocomplete': r['title']},
