@@ -7,65 +7,69 @@ import json
 
 from fnmatch import fnmatch
 from os import path
+from time import strftime
 
 _MAX_RESULTS=9
 _ALIASES_FILE=u'aliases.json'
 _BUILTINS_FILE=u'builtins.json'
+_HISTORY_FILE=u'history.json'
 _TIMESTAMP=u'%Y-%m-%d @ %H:%M'
 
 def fetch_aliases(_path=_ALIASES_FILE):
-    if not path.isfile(_path):
+    file = path.join(alfred.work(volatile=False), _path)
+    if not path.isfile(file):
         return {}
-    return json.load(open(_path, 'r'))
+    return json.load(open(file, 'r'))
 
-def update_aliases(_dict, _path=_ALIASES_FILE):
-    json.dump(_dict, open(_path, 'w'))
+def write_aliases(_dict, _path=_ALIASES_FILE):
+    file = path.join(alfred.work(volatile=False), _path)
+    json.dump(_dict, open(file, 'w'))
 
-def fetch_builtins(_path=_BUILTINS_FILE):
-    return json.load(open(_path, 'r'))
+def new_alias(_dict, definition):
+    if u'=' in definition:
+        (alias, pipe) = definition.split(u'=', 1)
+    else:
+        (alias, pipe) = (definition, u'')
 
-def complete(query, maxresults=_MAX_RESULTS):
-    aliases = fetch_aliases()
-    builtins = fetch_builtins()
-
-    if query.startswith('alias '):
-        if query.endswith('$$'):
-            (alias, pipe) = query[6:-2].split(u'=', 1) # XXX: this could error
-            aliases[alias] = pipe
-            update_aliases(aliases)
-            return alfred.xml([alfred.Item(
-                attributes = {'uid': u'pipe:{}'.format(pipe) , 'valid': u'no', 'autocomplete': alias},
-                title = u"{} => ({})".format(alias, pipe),
-                subtitle = u'Alias saved! Hit Enter to continue',
-                icon = u'icon.png'
-            )])
-        if u' ' in query[6:]:
-            (alias, pipe) = query[6:].split(u' ', 1)
-        else:
-            (alias, pipe) = (query[6:], u'')
+    if not alias:
         return alfred.xml([alfred.Item(
-            attributes = {'uid': u'pipe:{}'.format(pipe) , 'valid': u'no'},
-            title = u"Alias {} => ({})".format(alias, pipe),
-            subtitle = u'Terminate one-liner with $$ and hit Enter to save',
+            attributes = {'uid': u'pipe:help', 'valid': u'no'},
+            title = u"alias NAME=VALUE",
+            subtitle = u'Terminate VALUE with @@ to save',
             icon = u'icon.png'
         )])
 
-    if query in aliases:
-        pipe = aliases[query]
+    if pipe and pipe.endswith('@@'):
+        pipe = pipe[:-2]
+        _dict[alias] = pipe
+        write_aliases(_dict)
         return alfred.xml([alfred.Item(
-            attributes = {'uid': u'pipe:{}'.format(pipe), 'arg': pipe},
-            title = pipe,
-            subtitle = u'(expanded alias)',
+            attributes = {'uid': u'pipe:{}'.format(pipe) , 'valid': u'no', 'autocomplete': alias},
+            title = u"alias {}={}".format(alias, pipe),
+            subtitle = u'Alias saved! TAB to continue',
             icon = u'icon.png'
         )])
+    
+    return alfred.xml([alfred.Item(
+        attributes = {'uid': u'pipe:{}'.format(pipe) , 'valid': u'no'},
+        title = u"alias {}={}".format(alias, pipe or 'VALUE'),
+        subtitle = u'Terminate with @@ to save',
+        icon = u'icon.png'
+    )])
+    
 
-    results = [alfred.Item(
-            attributes = {'uid': u'pipe:{}'.format(query) , 'arg': query},
-            title = query,
-            subtitle = None,
-            icon = u'icon.png'
-    )]
-    for (alias, pipe) in aliases.iteritems():
+def exact_alias(_dict, query):
+    pipe = _dict[query]
+    return alfred.xml([alfred.Item(
+        attributes = {'uid': u'pipe:{}'.format(pipe), 'arg': pipe},
+        title = pipe,
+        subtitle = u'(expanded alias)',
+        icon = u'icon.png'
+    )])
+
+def match_aliases(_dict, query):
+    results = []
+    for (alias, pipe) in _dict.iteritems():
         if fnmatch(alias, u'{}*'.format(query)):
             results.append(alfred.Item(
                 attributes = {'uid': u'pipe:{}'.format(pipe) , 'arg': pipe, 'autocomplete': pipe},
@@ -73,14 +77,71 @@ def complete(query, maxresults=_MAX_RESULTS):
                 subtitle = u'(alias: {})'.format(alias),
                 icon = u'icon.png'
             ))
+    return results
 
-    for (pipe, description) in builtins.iteritems():
-        if fnmatch(pipe, u'*{}*'.format(query)):
+def fetch_builtins(_path=_BUILTINS_FILE):
+    return json.load(open(_path, 'r'))
+
+def match_builtins(_dict, query):
+    results = []
+    for (pipe, desc) in _dict.iteritems():
+        if fnmatch(pipe, u'*{}*'.format(query)) or fnmatch(desc, u'*{}*'.format(query)):
             results.append(alfred.Item(
                 attributes = {'uid': u'pipe:{}'.format(pipe) , 'arg': pipe, 'autocomplete': pipe},
                 title = pipe,
-                subtitle = u'(builtin: {})'.format(description),
+                subtitle = u'(builtin: {})'.format(desc),
                 icon = u'icon.png'
             ))
+    return results
+
+def fetch_history(_path=_HISTORY_FILE):
+    file = path.join(alfred.work(volatile=False), _path)
+    if not path.isfile(file):
+        return {}
+    return json.load(open(file, 'r'))
+
+def update_history(item, _path=_HISTORY_FILE):
+    file = path.join(alfred.work(volatile=True), _path)
+    history = path.isfile(file) and json.load(open(file), 'w') or {}
+    history[item] = strftime(_TIMESTAMP)
+    json.dump(history, open(file, 'w'))
+
+def match_history(_dict, query):
+    results = []
+    for (pipe, timestamp) in _dict.iteritems():
+        if fnmatch(pipe, u'*{}*'.format(query)):
+            results.append(alfred.Item(
+                attributes = {'uid': u'pipe:{}'.format(pipe), 'arg': pipe, 'autocomplete': pipe},
+                title = pipe,
+                subtitle = u'(last used: {})'.format(timestamp),
+                icon = u'icon.png'
+            ))
+    return results
+
+def verbatim(query):
+    return alfred.Item(
+        attributes = {'uid': u'pipe:{}'.format(query), 'arg': query},
+        title = query,
+        subtitle = u'(verbatim)',
+        icon = u'icon.png'
+    )
+
+def complete(query, maxresults=_MAX_RESULTS):
+    aliases = fetch_aliases()
+    history = fetch_history()
+    builtins = fetch_builtins()
+
+    if query.startswith('alias '):
+        return new_alias(aliases, query[6:])
+
+    results = []
+
+    results.append(verbatim(query))
+    for matches in (
+        match_history(history, query),
+        match_aliases(aliases, query),
+        match_builtins(builtins, query)
+    ):
+        results.extend(matches)
 
     return alfred.xml(results, maxresults=maxresults)

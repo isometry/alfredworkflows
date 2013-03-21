@@ -1,1 +1,20 @@
-{"sort -u": "unique lines", "perl -nle 'print lc'": "lowercase", "openssl base64 -e": "encode base64", "openssl base64 -d": "decode base64", "perl -nle 'print uc'": "uppercase", "sort -n -t. -k1,1 -k2,2 -k3,3 -k4,4": "sort IPv4 addresses", "sort | uniq -c | sort -rn | head -10": "top 10 unique lines"}
+{
+    "openssl base64 -d": "decode base64",
+    "openssl base64 -e": "encode base64",
+    "openssl enc -d -base64 -aes256 -k X": "AES-256 decrypt with passphrase 'X'",
+    "openssl enc -e -base64 -aes256 -k X": "AES-256 encrypt with passphrase 'X'",
+    "openssl x509 -noout -fingerprint": "x509 fingerprint",
+    "openssl x509 -noout -hash": "x509 hash",
+    "openssl x509 -text": "x509 certificate information",
+    "perl -ne 'print unless $a{$_}++'": "unique lines",
+    "perl -ne 'print unless /^$/'": "remove all blank lines",
+    "perl -nle 'print lc'": "lowercase",
+    "perl -nle 'print uc'": "uppercase",
+    "perl -pe '$_ = \"$. $_\"'": "number all lines",
+    "python -c \"import json,sys; print json.dumps(json.load(sys.stdin),indent=4,separators=(',',': '))\"": "reformat JSON",
+    "sed '1!G;h;$!d'": "reverse",
+    "sed G": "doublespace",
+    "sort -n -t. -k1,1 -k2,2 -k3,3 -k4,4": "sort IPv4 addresses",
+    "sort -u": "sorted unique lines",
+    "sort | uniq -c | sort -rn | head -10": "top 10 unique lines"
+}
