@@ -1,0 +1,1 @@
+{"sort -u": "unique lines", "perl -nle 'print lc'": "lowercase", "openssl base64 -e": "encode base64", "openssl base64 -d": "decode base64", "perl -nle 'print uc'": "uppercase", "sort -n -t. -k1,1 -k2,2 -k3,3 -k4,4": "sort IPv4 addresses", "sort | uniq -c | sort -rn | head -10": "top 10 unique lines"}

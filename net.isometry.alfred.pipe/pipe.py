@@ -10,6 +10,7 @@ from os import path
 
 _MAX_RESULTS=9
 _ALIASES_FILE=u'aliases.json'
+_BUILTINS_FILE=u'builtins.json'
 _TIMESTAMP=u'%Y-%m-%d @ %H:%M'
 
 def fetch_aliases(_path=_ALIASES_FILE):
@@ -20,12 +21,16 @@ def fetch_aliases(_path=_ALIASES_FILE):
 def update_aliases(_dict, _path=_ALIASES_FILE):
     json.dump(_dict, open(_path, 'w'))
 
+def fetch_builtins(_path=_BUILTINS_FILE):
+    return json.load(open(_path, 'r'))
+
 def complete(query, maxresults=_MAX_RESULTS):
     aliases = fetch_aliases()
+    builtins = fetch_builtins()
 
     if query.startswith('alias '):
         if query.endswith('$$'):
-            (alias, pipe) = query[6:-2].split(u' ', 1) # XXX: this could error
+            (alias, pipe) = query[6:-2].split(u'=', 1) # XXX: this could error
             aliases[alias] = pipe
             update_aliases(aliases)
             return alfred.xml([alfred.Item(
@@ -58,15 +63,24 @@ def complete(query, maxresults=_MAX_RESULTS):
             attributes = {'uid': u'pipe:{}'.format(query) , 'arg': query},
             title = query,
             subtitle = None,
-            icon = 'icon.png'
+            icon = u'icon.png'
     )]
     for (alias, pipe) in aliases.iteritems():
         if fnmatch(alias, u'{}*'.format(query)):
             results.append(alfred.Item(
                 attributes = {'uid': u'pipe:{}'.format(pipe) , 'arg': pipe, 'autocomplete': pipe},
                 title = pipe,
-                subtitle = u'(aliased as {})'.format(alias),
-                icon = 'icon.png'
+                subtitle = u'(alias: {})'.format(alias),
+                icon = u'icon.png'
+            ))
+
+    for (pipe, description) in builtins.iteritems():
+        if fnmatch(pipe, u'*{}*'.format(query)):
+            results.append(alfred.Item(
+                attributes = {'uid': u'pipe:{}'.format(pipe) , 'arg': pipe, 'autocomplete': pipe},
+                title = pipe,
+                subtitle = u'(builtin: {})'.format(description),
+                icon = u'icon.png'
             ))
 
     return alfred.xml(results, maxresults=maxresults)
