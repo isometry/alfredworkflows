@@ -2,9 +2,9 @@
 
 A workflow for [Alfred](http://www.alfredapp.com/) to dynamically search and open iTunes Movie Trailers.
 
-![Example 1](https://raw.github.com/isometry/alfredworkflows/screenshots/trailer_example1.png)
+![Example 1](https://raw.github.com/isometry/alfredworkflows/master/screenshots/trailer_example1.png)
 
-![Example 2](https://raw.github.com/isometry/alfredworkflows/screenshots/trailer_example2.png)
+![Example 2](https://raw.github.com/isometry/alfredworkflows/master/screenshots/trailer_example2.png)
 
 ## Requirements
 
