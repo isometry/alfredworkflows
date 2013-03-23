@@ -2,9 +2,9 @@
 
 A workflow for [Alfred](http://www.alfredapp.com/) to rapidly open a Secure SHell (ssh) sessions with smart hostname autocompletion based on the contents of `~/.ssh/known_hosts`, `~/.ssh/config`, `/etc/hosts` and (optionally) Bonjour.
 
-![Example 1](https://raw.github.com/isometry/alfredworkflows/screenshots/ssh_local.png)
+![Example 1](https://raw.github.com/isometry/alfredworkflows/master/screenshots/ssh_local.png)
 
-![Example 2](https://raw.github.com/isometry/alfredworkflows/screenshots/ssh_user@local.png)
+![Example 2](https://raw.github.com/isometry/alfredworkflows/master/screenshots/ssh_user@local.png)
 
 ## Requirements
 
