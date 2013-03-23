@@ -86,6 +86,6 @@ print complete("{query}")</string>
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/isometry/alfredworkflows</string>
+	<string>https://github.com/isometry/alfredworkflows/tree/master/net.isometry.alfred.trailer</string>
 </dict>
 </plist>

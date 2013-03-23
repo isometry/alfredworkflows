@@ -90,6 +90,6 @@ NB: in order to enable Bonjour discovery, you must install the pybonjour module:
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/isometry/alfredworkflows</string>
+	<string>https://github.com/isometry/alfredworkflows/tree/master/net.isometry.alfred.ssh</string>
 </dict>
 </plist>

@@ -10,7 +10,7 @@ A workflow for [Alfred](http://www.alfredapp.com/) to dynamically search and ope
 
 - [Alfred](http://www.alfredapp.com/) (version 2.0+)
 - The [Alfred Powerpack](http://www.alfredapp.com/powerpack/).
-- [trailer.alfredworkflow](https://raw.github.com/isometry/alfredworkflows/trailer.alfredworkflow)
+- [trailer.alfredworkflow](https://raw.github.com/isometry/alfredworkflows/master/trailer.alfredworkflow)
 
 ## Usage
 

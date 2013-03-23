@@ -248,6 +248,6 @@ man 2 open   # search section 2 for pages with 'open' in the name</string>
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/isometry/alfredworkflows</string>
+	<string>https://github.com/isometry/alfredworkflows/tree/master/net.isometry.alfred.man</string>
 </dict>
 </plist>

@@ -1,31 +1,24 @@
-# pipe workflow by isometry
+# man workflow by isometry
 
-A workflow for [Alfred](http://www.alfredapp.com/) to transform the currently selected text or the contents of the clipboard by passing it through an arbitrary shell one-liner.
+A workflow for [Alfred](http://www.alfredapp.com/) to rapidly open UNIX man pages in any of traditional Terminal, HTML or PDF format.
+
+![Example 1](https://raw.github.com/isometry/alfredworkflows/master/screenshots/man_example1.png)
+
+![Example 2](https://raw.github.com/isometry/alfredworkflows/master/screenshots/man_example2.png)
 
 ## Requirements
 
 - [Alfred](http://www.alfredapp.com/) (version 2.0+)
 - The [Alfred Powerpack](http://www.alfredapp.com/powerpack/).
-- [pipe.alfredworkflow](https://raw.github.com/isometry/alfredworkflows/master/pipe.alfredworkflow)
+- [man.alfredworkflow](https://raw.github.com/isometry/alfredworkflows/master/man.alfredworkflow)
 
 ## Usage
 
-(Optional) assign hotkeys for the two Hotkey handlers in the workflow. I recommend `Cmd+Shift+|` and `Cmd+Ctrl+\`, respectively.
-
-Two actions are available, both taking an arbitrarily complex shell pipe as their argument:
-
-1. triggered by the first hotkey or by the `|` or `pipe` keywords, will transform the clipboard in-place by passing its contents through the pipe given as argument.
-2. triggered by the second hotkey, will transform the currently selected text in-place by passing its contents through the pipe given as argument.
-
-A number of built-in pipelines are [included](https://raw.github.com/isometry/alfredworkflows/net.isometry.alfred.pipe/builtins.json), and custom aliases can also be defined with the following syntax:
-
-`| alias NAME=PIPE | LINE@@`
-
-`| alias tac=sed '1!G;h;$!d'@@`
+Type `man`, `pman` or `hman` in Alfred, optionally followed by the section to which you wish to restrict search, followed by a glob pattern to match against man page names.
 
 ## Contributions & Thanks
 
-- ctwise
+- [Sebastian](http://www.alfredforum.com/user/145-sebastian/)
 
 ## License
 
