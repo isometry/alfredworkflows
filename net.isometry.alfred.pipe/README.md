@@ -1,4 +1,4 @@
-# pipe workflows by isometry
+# pipe workflow by isometry
 
 A workflow for [Alfred](http://www.alfredapp.com/) to transform the currently selected text or the contents of the clipboard by passing it through an arbitrary shell one-liner.
 
