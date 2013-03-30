@@ -186,7 +186,7 @@ print complete("""{query}""")</string>
 			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
-	tell application "Alfred 2" to search "! "
+	tell application "Alfred 2" to search "|| "
 end alfred_script</string>
 				<key>cachescript</key>
 				<true/>
@@ -204,7 +204,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>!</string>
+				<string>||</string>
 				<key>script</key>
 				<string>from pipe import complete
 print complete("""{query}""")</string>
