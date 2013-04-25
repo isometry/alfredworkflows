@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>net.isometry.alfred.terminology</string>
+	<key>connections</key>
+	<dict>
+		<key>E5C6E4F8-291B-45C1-8088-A66B9761354A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>DFA1E3EF-88F8-49DF-8F2A-A3D6E54AED61</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Robin Breathe</string>
+	<key>description</key>
+	<string>Explore the English language on term.ly</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Terminology</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>DFA1E3EF-88F8-49DF-8F2A-A3D6E54AED61</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>4</integer>
+				<key>keyword</key>
+				<string>term</string>
+				<key>runningsubtext</key>
+				<string>Searching for matching terms…</string>
+				<key>script</key>
+				<string>from terminology import complete
+print complete("{query}")</string>
+				<key>subtext</key>
+				<string>Explore the English language on term.ly</string>
+				<key>title</key>
+				<string>Terminology</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>E5C6E4F8-291B-45C1-8088-A66B9761354A</string>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string># About
+
+## What is term.ly?
+
+term.ly is a way to explore the English language. It is a semantic reference. A dictionary. A thesaurus. A reference tool. Maybe more. Maybe less.
+
+## Who is behind term.ly?
+
+term.ly was created by [Agile Tortoise, Inc](http://agiletortoise.com/). and is provided as a free online resource.
+
+## The Data
+
+Most of term.ly core data is based on [WordNet](http://wordnet.princeton.edu/), a large lexical database of English, developed at Princeton University. For more details on this excellent resource, read up on the [WordNet FAQs](http://wordnet.princeton.edu/wordnet/faq/).
+
+## The Fine Print
+
+WordNet 3.0 Copyright 2006 by Princeton University. All rights reserved. THIS SOFTWARE AND DATABASE IS PROVIDED "AS IS" AND PRINCETON UNIVERSITY MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED. BY WAY OF EXAMPLE, BUT NOT LIMITATION, PRINCETON UNIVERSITY MAKES NO REPRESENTATIONS OR WARRANTIES OF MERCHANT- ABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THE LICENSED SOFTWARE, DATABASE OR DOCUMENTATION WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS. The name of Princeton University or Princeton may not be used in advertising or publicity pertaining to distribution of the software and/or database. Title to copyright in this software, database and any associated documentation shall at all times remain with Princeton University and LICENSEE agrees to preserve same.</string>
+	<key>uidata</key>
+	<dict>
+		<key>DFA1E3EF-88F8-49DF-8F2A-A3D6E54AED61</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+		<key>E5C6E4F8-291B-45C1-8088-A66B9761354A</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
