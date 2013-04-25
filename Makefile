@@ -10,7 +10,7 @@ ssh:
 	zip -j9 --filesync ssh.alfredworkflow  net.isometry.alfred.ssh/*.{plist,png,py}
 
 terminology:
-	zip -j9 --filesync terminology.alfredworkflow  net.isometry.alfred.terminology/*.{egg,plist,png,py}
+	zip -j9 --filesync terminology.alfredworkflow  net.isometry.alfred.terminology/*.{plist,png,py}
 
 trailer:
 	zip -j9 --filesync trailer.alfredworkflow  net.isometry.alfred.trailer/*.{egg,plist,png,py}
