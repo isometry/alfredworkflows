@@ -17,6 +17,8 @@ A workflow for [Alfred](http://www.alfredapp.com/) to rapidly open a Secure SHel
 
 Type `ssh` in Alfred followed by either a literal hostname or by some letters from the hostname of a host referenced in any of `~/.ssh/known_hosts`, `~/.ssh/config`, `/etc/hosts`, or (with `pybonjour` installed) Bonjour.
 
+If you wish to use iTerm rather than Terminal.app, instructions for overriding the ssh protocol handler can be found [here](http://apple.stackexchange.com/questions/28938/set-iterm2-as-the-ssh-url-handler) and [here](http://www.alfredforum.com/topic/826-ssh-with-smart-hostname-autocompletion/#entry4147)
+
 ## Contributions & Thanks
 
 - [nikipore](https://github.com/nikipore)

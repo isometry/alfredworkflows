@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-# ssh.alfredworkflow, v1.1
+# ssh.alfredworkflow, v1.2
 # Robin Breathe, 2013
 
 import alfred
@@ -60,7 +60,7 @@ def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
         with open(path.expanduser(_path), 'r') as ssh_config:
             results.update(
                 x for line in ssh_config
-                if line.startswith('Host ')
+                if line[:5].lower() == 'host '
                 for x in line.split()[1:]
                 if not ('*' in x or '?' in x or '!' in x)
             )
