@@ -79,8 +79,11 @@ def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
     results = set()
     try:
         with open(path.expanduser(_path), 'r') as known_hosts:
-            for line in known_hosts:
-                results.update(line.split()[0].split(','))
+            results.update(
+                x for line in known_hosts
+                if line.strip() and not line.startswith('|')
+                for x in line.split()[0].split(',')
+            )
     except IOError:
         pass
     json.dump(list(results), open(cache, 'w'))
@@ -96,8 +99,11 @@ def fetch_hosts(_path, alias='/etc/hosts'):
     results = set()
     try:
         with open(_path, 'r') as etc_hosts:
-            for line in (x for x in etc_hosts if not x.startswith('#')):
-                results.update(line.split()[1:])
+            results.update(
+                x for line in etc_hosts
+                if not line.startswith('#')
+                for x in line.split()[1:]
+            )
         results.discard('broadcasthost')
     except IOError:
         pass
