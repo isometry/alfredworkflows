@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>net.isometry.alfred.ssh</string>
+	<key>category</key>
+	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>73503A72-F4BD-4C29-B531-ACE7CF405F6B</key>

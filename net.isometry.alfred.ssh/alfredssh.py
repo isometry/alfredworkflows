@@ -48,7 +48,7 @@ class Hosts(object):
             items.append(self.item(host, source))
         return alfred.xml(items, maxresults=maxresults)
 
-def fetch_ssh_config(_path, alias='~/.ssh/ssh_config'):
+def fetch_ssh_config(_path, alias='~/.ssh/config'):
     master = path.expanduser(_path)
     if not path.isfile(master):
         return
