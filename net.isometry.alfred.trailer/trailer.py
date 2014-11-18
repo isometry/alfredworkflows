@@ -108,7 +108,14 @@ def latest_results(maxresults=_MAX_RESULTS):
 def complete(query, maxresults=_MAX_RESULTS):
     if query == 'latest':
         results = latest_results()
-    else:
+    elif len(query) >= 3:
         results = search_results(query)
+    else:
+        results = [alfred.Item(
+            attributes = {'valid': u'yes'},
+            title = u'Find iTunes Movie Trailers',
+            subtitle = u'Search term must be three-characters or longer...',
+            icon = u'icon.png'
+        )]
 
     return alfred.xml(results, maxresults=_MAX_RESULTS)
