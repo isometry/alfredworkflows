@@ -8,7 +8,7 @@ A workflow for [Alfred](http://www.alfredapp.com/) to rapidly open a Secure SHel
 
 ## Requirements
 
-- [Alfred](http://www.alfredapp.com/) (version 2.0+)
+- [Alfred](http://www.alfredapp.com/) (version 2.4+)
 - The [Alfred Powerpack](http://www.alfredapp.com/powerpack/).
 - [ssh.alfredworkflow](https://raw.github.com/isometry/alfredworkflows/master/ssh.alfredworkflow)
 - (optional) [pybonjour](https://pypi.python.org/pypi/pybonjour)
