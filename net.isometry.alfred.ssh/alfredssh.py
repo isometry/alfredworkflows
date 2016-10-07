@@ -1,15 +1,19 @@
+#!/usr/bin/env python2.7
 #-*- coding: utf-8 -*-
-# ssh.alfredworkflow, v1.2
-# Robin Breathe, 2013
+# ssh.alfredworkflow, v2.0
+# Robin Breathe, 2013-2016
 
-import alfred
+from __future__ import unicode_literals
+from __future__ import print_function
+
 import json
 import re
+import sys
+import os
 
-from os import path
 from time import time
 
-_MAX_RESULTS=36
+DEFAULT_MAX_RESULTS=36
 
 class Hosts(object):
     def __init__(self, original, user=None):
@@ -32,93 +36,123 @@ class Hosts(object):
 
     def item(self, host, source):
         _arg = self.user and '@'.join([self.user, host]) or host
-        _uri = 'ssh://%s' % _arg
-        _sub = 'Connect to %s (source: %s)' % (_uri, ', '.join(source))
-        return alfred.Item(
-            attributes={'uid': _uri, 'arg': _arg, 'autocomplete': _arg},
-            title=_uri, subtitle=_sub, icon='icon.png'
-        )
+        _uri = 'ssh://{}'.format(_arg)
+        _sub = 'source: {}'.format(', '.join(source))
+        return {
+            "uid": _uri,
+            "title": _uri,
+            "subtitle": _sub,
+            "arg": _arg,
+            "icon": { "path": "icon.png" },
+            "autocomplete": _arg
+        }
 
-    def xml(self, _filter=(lambda x: True), maxresults=_MAX_RESULTS):
+    def json(self, _filter=(lambda x: True), maxresults=DEFAULT_MAX_RESULTS):
         items = [self.item(host=self.original, source=self.hosts[self.original])]
         for (host, source) in (
-            (x, y) for (x, y) in self.hosts.iteritems()
+            (x, y) for (x, y) in self.hosts.items()
             if ((x != self.original) and _filter(x))
         ):
             items.append(self.item(host, source))
-        return alfred.xml(items, maxresults=maxresults)
+        return json.dumps({"items": items[:maxresults]})
 
-def fetch_ssh_config(_path, alias='~/.ssh/config'):
-    master = path.expanduser(_path)
-    if not path.isfile(master):
+def _create(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    if not os.access(path, os.W_OK):
+        raise IOError('No write access: %s' % path)
+    return path
+
+
+def work(volatile):
+    path = {
+        True: os.getenv('alfred_workflow_cache'),
+        False: os.getenv('alfred_workflow_data')
+    }[bool(volatile)]
+    if path is None:
+        path = os.getenv('TMPDIR')
+    return _create(os.path.expanduser(path))
+
+
+def fetch_file(file_path, cache_prefix, parser, env_flag):
+    """
+    Parse and cache a file with the named parser
+    """
+    # Allow default sources to be disabled
+    if env_flag is not None and int(os.getenv('alfredssh_{}'.format(env_flag), 1)) != 1:
         return
-    cache = path.join(alfred.work(volatile=True), 'ssh_config.1.json')
-    if path.isfile(cache) and path.getmtime(cache) > path.getmtime(master):
-        return (json.load(open(cache, 'r')), alias)
-    results = set()
+
+    # Expand the specified file path
+    master = os.path.expanduser(file_path)
+
+    # Skip a missing file
+    if not os.path.isfile(master):
+        return
+
+    # Read from JSON cache if it's up-to-date
+    if cache_prefix is not None:
+        cache = os.path.join(work(volatile=True),
+                          '{}.1.json'.format(cache_prefix))
+        if os.path.isfile(cache) and os.path.getmtime(cache) > os.path.getmtime(master):
+            return (json.load(open(cache, 'r')), file_path)
+
+    # Open and parse the file
     try:
-        with open(path.expanduser(_path), 'r') as ssh_config:
-            results.update(
-                x for line in ssh_config
+        with open(master, 'r') as f:
+            results = parse_file(f, parser)
+    except IOError:
+        pass
+    else:
+        # Update the JSON cache
+        if cache_prefix is not None:
+            json.dump(list(results), open(cache, 'w'))
+        # Return results
+        return (results, file_path)
+
+def parse_file(open_file, parser):
+    parsers = {
+        'ssh_config':
+            (
+                host for line in open_file
                 if line[:5].lower() == 'host '
-                for x in line.split()[1:]
-                if not ('*' in x or '?' in x or '!' in x)
-            )
-    except IOError:
-        pass
-    json.dump(list(results), open(cache, 'w'))
-    return (results, alias)
-
-def fetch_known_hosts(_path, alias='~/.ssh/known_hosts'):
-    master = path.expanduser(_path)
-    if not path.isfile(master):
-        return
-    cache = path.join(alfred.work(volatile=True), 'known_hosts.1.json')
-    if path.isfile(cache) and path.getmtime(cache) > path.getmtime(master):
-        return (json.load(open(cache, 'r')), alias)
-    results = set()
-    try:
-        with open(path.expanduser(_path), 'r') as known_hosts:
-            results.update(
-                x for line in known_hosts
+                for host in line.split()[1:]
+                if not ('*' in host or '?' in host or '!' in host)
+            ),
+        'known_hosts':
+            (
+                host for line in open_file
                 if line.strip() and not line.startswith('|')
-                for x in line.split()[0].split(',')
-            )
-    except IOError:
-        pass
-    json.dump(list(results), open(cache, 'w'))
-    return (results, alias)
-
-def fetch_hosts(_path, alias='/etc/hosts'):
-    master = path.expanduser(_path)
-    if not path.isfile(master):
-        return
-    cache = path.join(alfred.work(volatile=True), 'hosts.1.json')
-    if path.isfile(cache) and path.getmtime(cache) > path.getmtime(master):
-        return (json.load(open(cache, 'r')), alias)
-    results = set()
-    try:
-        with open(_path, 'r') as etc_hosts:
-            results.update(
-                x for line in etc_hosts
+                for host in line.split()[0].split(',')
+            ),
+        'hosts':
+            (
+                host for line in open_file
                 if not line.startswith('#')
-                for x in line.split()[1:]
+                for host in line.split()[1:]
+                if host != 'broadcasthost'
+            ),
+        'extra_file':
+            (
+                host for line in open_file
+                if not line.startswith('#')
+                for host in line.split()
             )
-        results.discard('broadcasthost')
-    except IOError:
-        pass
-    json.dump(list(results), open(cache, 'w'))
-    return (results, alias)
+    }
+    results = set()
+    results.update(parsers[parser])
+    return results
 
 def fetch_bonjour(_service, alias='Bonjour', timeout=0.1):
-    cache = path.join(alfred.work(volatile=True), 'bonjour.1.json')
-    if path.isfile(cache) and (time() - path.getmtime(cache) < 60):
+    if int(os.getenv('alfredssh_bonjour', 1)) != 1:
+        return
+    cache = os.path.join(work(volatile=True), 'bonjour.1.json')
+    if os.path.isfile(cache) and (time() - os.path.getmtime(cache) < 60):
         return (json.load(open(cache, 'r')), alias)
     results = set()
     try:
         from pybonjour import DNSServiceBrowse, DNSServiceProcessResult
         from select import select
-        bj_callback = lambda s, f, i, e, n, t, d: results.add('%s.%s' % (n.lower(), d[:-1]))
+        bj_callback = lambda s, f, i, e, n, t, d: results.add('{}.{}'.format(n.lower(), d[:-1]))
         bj_browser = DNSServiceBrowse(regtype=_service, callBack=bj_callback)
         select([bj_browser], [], [], timeout)
         DNSServiceProcessResult(bj_browser)
@@ -128,7 +162,10 @@ def fetch_bonjour(_service, alias='Bonjour', timeout=0.1):
     json.dump(list(results), open(cache, 'w'))
     return (results, alias)
 
-def complete(query, maxresults=_MAX_RESULTS):
+def complete():
+    query = sys.argv[1]
+    maxresults = int(os.getenv('alfredssh_max_results', DEFAULT_MAX_RESULTS))
+
     if '@' in query:
         (user, host) = query.split('@', 1)
     else:
@@ -138,12 +175,22 @@ def complete(query, maxresults=_MAX_RESULTS):
     pattern = re.compile('.*?\b?'.join(host_chars), flags=re.IGNORECASE)
 
     hosts = Hosts(original=host, user=user)
+
     for results in (
-        fetch_ssh_config('~/.ssh/config'),
-        fetch_known_hosts('~/.ssh/known_hosts'),
-        fetch_hosts('/etc/hosts'),
+        fetch_file('~/.ssh/config', 'ssh_config', 'ssh_config', 'ssh_config'),
+        fetch_file('~/.ssh/known_hosts', 'known_hosts', 'known_hosts', 'known_hosts'),
+        fetch_file('/etc/hosts', 'hosts', 'hosts', 'hosts'),
         fetch_bonjour('_ssh._tcp')
     ):
         hosts.update(results)
 
-    return hosts.xml(pattern.search, maxresults=maxresults)
+    extra_files = os.getenv('alfredssh_extra_files')
+    if extra_files:
+        for file_spec in extra_files.split():
+            (file_prefix, file_path) = file_spec.split('=', 1)
+            hosts.update(fetch_file(file_path, file_prefix, 'extra_file', None))
+
+    return hosts.json(pattern.search, maxresults=maxresults)
+
+if __name__ == '__main__':
+    print(complete())
