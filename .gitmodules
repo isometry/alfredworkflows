@@ -1,0 +1,3 @@
+[submodule "net.isometry.alfred.ssh"]
+	path = net.isometry.alfred.ssh
+	url = git@github.com:isometry/alfred-ssh.git
