@@ -4,3 +4,6 @@
 [submodule "net.isometry.alfred.man"]
 	path = net.isometry.alfred.man
 	url = git@github.com:isometry/alfred-man.git
+[submodule "net.isometry.alfred.pipe"]
+	path = net.isometry.alfred.pipe
+	url = git@github.com:isometry/alfred-pipe.git
